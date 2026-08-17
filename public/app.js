@@ -531,6 +531,37 @@ async function loadToursFromAPI() {
       `;
 
       toursGrid.appendChild(card);
+          // ==============================
+      // OPEN TOUR DETAILS
+      // ==============================
+
+      card.addEventListener("click", event => {
+
+        // Ignore click when View Tour button is handled separately
+        if (
+          event.target.closest(".tour-view-btn")
+        ) {
+          return;
+        }
+
+        openTourDetails(tour);
+
+      });
+
+      const viewButton =
+        card.querySelector(".tour-view-btn");
+
+      if (viewButton) {
+
+        viewButton.addEventListener("click", event => {
+
+          event.stopPropagation();
+
+          openTourDetails(tour);
+
+        });
+
+      }
 
     });
 
@@ -586,6 +617,213 @@ async function loadToursFromAPI() {
     );
 
   }
+
+}
+// ==========================================
+// TOUR DETAILS
+// ==========================================
+
+function openTourDetails(tour) {
+
+  const name =
+    document.getElementById("tourDetailsName");
+
+  const description =
+    document.getElementById("tourDetailsDescription");
+
+  const price =
+    document.getElementById("tourDetailsPrice");
+
+  const duration =
+    document.getElementById("tourDetailsDuration");
+
+  const maxPeople =
+    document.getElementById("tourDetailsMaxPeople");
+
+  const start =
+    document.getElementById("tourDetailsStartingLocation");
+
+  const destination =
+    document.getElementById("tourDetailsDestination");
+
+  const image =
+    document.getElementById("tourDetailsImage");
+
+
+  if (name) {
+    name.textContent = tour.name;
+  }
+
+  if (description) {
+    description.textContent =
+      tour.description || "";
+  }
+
+  if (price) {
+    price.textContent =
+      `${Number(tour.price || 0).toLocaleString()} ETB`;
+  }
+
+  if (duration) {
+    duration.textContent =
+      tour.duration || "—";
+  }
+
+  if (maxPeople) {
+    maxPeople.textContent =
+      `${tour.max_people || "—"} people`;
+  }
+
+  if (start) {
+    start.textContent =
+      tour.starting_location || "Debark";
+  }
+
+  if (destination) {
+    destination.textContent =
+      tour.destination || "Simien Mountains";
+  }
+
+
+  if (image) {
+
+    image.textContent = "🥾";
+
+    image.style.backgroundImage = "";
+
+    if (tour.image_url) {
+
+      image.style.backgroundImage =
+        `url("${tour.image_url}")`;
+
+      image.style.backgroundSize = "cover";
+      image.style.backgroundPosition = "center";
+
+      image.textContent = "";
+
+    }
+
+  }
+      const bookTourBtn =
+    document.getElementById("bookTourBtn");
+
+  if (bookTourBtn) {
+
+    bookTourBtn.onclick = () => {
+
+      alert(
+        `Booking for ${tour.name} will be available soon.`
+      );
+
+    };
+
+  }
+
+    const routeButton =
+    document.querySelector(
+      "#tourDetailsScreen .directions-btn"
+    );
+
+  if (routeButton) {
+
+    routeButton.onclick = () => {
+
+      const routeName =
+        document.getElementById("routeTourName");
+
+      const routeSummary =
+        document.getElementById("routeTourSummary");
+
+      const routeStart =
+        document.getElementById("routeStart");
+
+      const routeDestination =
+        document.getElementById("routeDestination");
+
+      const timeline =
+        document.getElementById("routeTimeline");
+
+      if (routeName) {
+        routeName.textContent = tour.name;
+      }
+
+      if (routeSummary) {
+        routeSummary.textContent =
+          `${tour.starting_location || "Debark"} to ${tour.destination || "Simien Mountains"}`;
+      }
+
+      if (routeStart) {
+        routeStart.textContent =
+          tour.starting_location || "Debark";
+      }
+
+      if (routeDestination) {
+        routeDestination.textContent =
+          tour.destination || "Simien Mountains";
+      }
+
+      if (timeline) {
+
+        const stops = [
+          tour.starting_location || "Debark",
+          tour.destination || "Simien Mountains"
+        ];
+
+        timeline.innerHTML = stops.map(
+          (stop, index) => `
+            <div class="route-stop">
+
+              <div class="route-dot"></div>
+
+              <div class="route-stop-content">
+
+                <strong>
+                  ${stop}
+                </strong>
+
+                <small>
+                  ${
+                    index === 0
+                      ? "Starting point of your journey"
+                      : "Tour destination"
+                  }
+                </small>
+
+              </div>
+
+            </div>
+          `
+        ).join("");
+
+      }
+
+      showScreen("tourRouteScreen");
+
+    };
+
+  }
+
+  showScreen("tourDetailsScreen");
+
+}
+const backToTours =
+  document.getElementById("backToTours");
+
+if (backToTours) {
+
+  backToTours.addEventListener("click", () => {
+    showScreen("toursScreen");
+  });
+
+}
+const backToTourDetails =
+  document.getElementById("backToTourDetails");
+
+if (backToTourDetails) {
+
+  backToTourDetails.addEventListener("click", () => {
+    showScreen("tourDetailsScreen");
+  });
 
 }
   loadPlacesFromAPI();
