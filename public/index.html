@@ -54,6 +54,11 @@
             <span>Places</span>
           </button>
 
+         <button class="category-card">
+          <span class="category-icon">🥾</span>
+          <span>Tours</span>
+         </button>
+
           <button class="category-card">
             <span class="category-icon">🏨</span>
             <span>Hotels</span>
@@ -131,6 +136,47 @@
 
     </section>
 
+<!-- TOURS SCREEN -->
+<section id="toursScreen" class="screen">
+
+  <header class="page-header">
+    <h1>Tour Packages</h1>
+    <p class="page-subtitle">
+      Explore Simien and Ras Dejen
+    </p>
+  </header>
+
+  <div class="filter-row tour-filters">
+    <button class="filter-btn active" data-tour-category="All">
+      All
+    </button>
+
+    <button class="filter-btn" data-tour-category="Day Tour">
+      Day Tours
+    </button>
+
+    <button class="filter-btn" data-tour-category="Trekking">
+      Trekking
+    </button>
+
+    <button class="filter-btn" data-tour-category="Wildlife">
+      Wildlife
+    </button>
+
+    <button class="filter-btn" data-tour-category="Mountain">
+      Mountain
+    </button>
+  </div>
+
+  <div id="toursGrid" class="tours-grid">
+
+    <div class="loading-state">
+      Loading tours...
+    </div>
+
+  </div>
+
+</section>
 
     <!-- NEARBY SCREEN -->
     <section id="nearbyScreen" class="screen">

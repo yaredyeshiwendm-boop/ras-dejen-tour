@@ -122,10 +122,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (category === "Places") {
 
-        showScreen("placesScreen");
+  showScreen("placesScreen");
 
-        return;
-      }
+  return;
+}
+
+if (category === "Tours") {
+
+  showScreen("toursScreen");
+
+  return;
+}
 
       alert(
         `${category}\n\nThis section will be available soon.`
@@ -423,5 +430,164 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Load database places
+  // ==========================================
+// TOURS API
+// ==========================================
+
+async function loadToursFromAPI() {
+
+  try {
+
+    const response = await fetch("/api/tours");
+
+    if (!response.ok) {
+      throw new Error("Failed to load tours");
+    }
+
+    const data = await response.json();
+
+    if (!data.success || !Array.isArray(data.tours)) {
+      return;
+    }
+
+    const toursGrid =
+      document.getElementById("toursGrid");
+
+    if (!toursGrid) return;
+
+    toursGrid.innerHTML = "";
+
+    data.tours.forEach(tour => {
+
+      const card =
+        document.createElement("article");
+
+      card.className = "tour-card";
+
+      card.dataset.category =
+        tour.category || "Other";
+
+      card.innerHTML = `
+
+        <div class="tour-image">
+          ${
+            tour.image_url
+              ? `<img src="${tour.image_url}" alt="${tour.name}">`
+              : "🏔️"
+          }
+        </div>
+
+        <div class="tour-info">
+
+          <div class="tour-category">
+            ${tour.category || "Tour"}
+          </div>
+
+          <h2>${tour.name}</h2>
+
+          <p>
+            ${tour.description || ""}
+          </p>
+
+          <div class="tour-meta">
+
+            <span>
+              🕐 ${tour.duration || "—"}
+            </span>
+
+            <span>
+              👥 Max ${tour.max_people || "—"}
+            </span>
+
+          </div>
+
+          <div class="tour-route">
+
+            <span>
+              📍 ${tour.starting_location || "Debark"}
+            </span>
+
+            <span>→</span>
+
+            <span>
+              ${tour.destination || ""}
+            </span>
+
+          </div>
+
+          <div class="tour-bottom">
+
+            <strong>
+              ${Number(tour.price).toLocaleString()} ETB
+            </strong>
+
+            <button class="tour-view-btn">
+              View Tour
+            </button>
+
+          </div>
+
+        </div>
+      `;
+
+      toursGrid.appendChild(card);
+
+    });
+
+    // ==============================
+    // TOUR FILTERS
+    // ==============================
+
+    document
+      .querySelectorAll("[data-tour-category]")
+      .forEach(button => {
+
+        button.addEventListener("click", () => {
+
+          document
+            .querySelectorAll("[data-tour-category]")
+            .forEach(btn =>
+              btn.classList.remove("active")
+            );
+
+          button.classList.add("active");
+
+          const category =
+            button.dataset.tourCategory;
+
+          document
+            .querySelectorAll(".tour-card")
+            .forEach(card => {
+
+              if (
+                category === "All" ||
+                card.dataset.category === category
+              ) {
+
+                card.style.display = "";
+
+              } else {
+
+                card.style.display = "none";
+
+              }
+
+            });
+
+        });
+
+      });
+
+  } catch (error) {
+
+    console.error(
+      "Tours API error:",
+      error.message
+    );
+
+  }
+
+}
   loadPlacesFromAPI();
+  loadToursFromAPI();
 });
