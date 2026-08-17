@@ -772,44 +772,50 @@ function openTourDetails(tour) {
 
   if (bookTourBtn) {
 
-  bookTourBtn.onclick = () => {
+    bookTourBtn.onclick = () => {
 
-    const bookingName =
-      document.getElementById("bookingTourName");
+      window.currentTour = tour;
 
-    const bookingTitle =
-      document.getElementById("bookingTourTitle");
+      const bookingName =
+        document.getElementById("bookingTourName");
 
-    const bookingRoute =
-      document.getElementById("bookingTourRoute");
+      const bookingTitle =
+        document.getElementById("bookingTourTitle");
 
-    const bookingDate =
-      document.getElementById("bookingDate");
+      const bookingRoute =
+        document.getElementById("bookingTourRoute");
 
-    if (bookingName) {
-      bookingName.textContent =
-        tour.name;
-    }
+      const bookingDate =
+        document.getElementById("bookingDate");
 
-    if (bookingTitle) {
-      bookingTitle.textContent =
-        tour.name;
-    }
+      const peopleValue =
+        document.getElementById("bookingPeopleValue");
 
-    if (bookingRoute) {
-      bookingRoute.textContent =
-        `${tour.starting_location || "Debark"} → ${tour.destination || "Simien Mountains"}`;
-    }
+      if (bookingName) {
+        bookingName.textContent = tour.name;
+      }
 
-    if (bookingDate) {
-      bookingDate.value = "";
-    }
+      if (bookingTitle) {
+        bookingTitle.textContent = tour.name;
+      }
 
-    showScreen("tourBookingScreen");
+      if (bookingRoute) {
+        bookingRoute.textContent =
+          `${tour.starting_location || "Debark"} → ${tour.destination || "Simien Mountains"}`;
+      }
 
-  };
+      if (bookingDate) {
+        bookingDate.value = "";
+      }
 
-}
+      if (peopleValue) {
+        peopleValue.textContent = "1";
+      }
+
+      showScreen("tourBookingScreen");
+    };
+
+  }
 
     const routeButton =
   document.querySelector(
@@ -996,3 +1002,204 @@ if ("serviceWorker" in navigator) {
   });
 
 }
+
+/* ==========================================
+   BOOKING CONTROLS
+   ========================================== */
+
+const decreasePeople =
+  document.getElementById("decreasePeople");
+
+const increasePeople =
+  document.getElementById("increasePeople");
+
+const peopleValue =
+  document.getElementById("bookingPeopleValue");
+
+const submitBooking =
+  document.getElementById("submitTourBooking");
+
+const bookingDate =
+  document.getElementById("bookingDate");
+
+let bookingPeople = 1;
+
+function updateBookingPeople() {
+
+  if (peopleValue) {
+    peopleValue.textContent = bookingPeople;
+  }
+
+  if (decreasePeople) {
+    decreasePeople.disabled = bookingPeople <= 1;
+  }
+}
+
+if (decreasePeople) {
+
+  decreasePeople.onclick = () => {
+
+    if (bookingPeople > 1) {
+      bookingPeople--;
+      updateBookingPeople();
+    }
+
+  };
+
+}
+
+if (increasePeople) {
+
+  increasePeople.onclick = () => {
+
+    bookingPeople++;
+    updateBookingPeople();
+
+  };
+
+}
+
+if (submitBooking) {
+
+  submitBooking.onclick = async () => {
+
+    const selectedTour =
+      window.currentTour || null;
+
+    if (!selectedTour || !selectedTour.id) {
+
+      alert("Please select a tour first.");
+
+      return;
+    }
+
+    if (!bookingDate || !bookingDate.value) {
+
+      alert("Please select your travel date.");
+
+      return;
+    }
+
+    submitBooking.disabled = true;
+    submitBooking.textContent = "Booking...";
+
+    try {
+
+      const telegramUser =
+        window.Telegram?.WebApp?.initDataUnsafe?.user;
+
+      if (!telegramUser?.id) {
+
+        throw new Error(
+          "Unable to identify Telegram user."
+        );
+
+      }
+
+      const userResponse =
+        await fetch("/api/users", {
+
+          method: "POST",
+
+          headers: {
+            "Content-Type": "application/json"
+          },
+
+          body: JSON.stringify({
+
+            telegram_id: telegramUser.id,
+
+            first_name:
+              telegramUser.first_name || "",
+
+            username:
+              telegramUser.username || ""
+
+          })
+
+        });
+
+      const userData =
+        await userResponse.json();
+
+      if (!userResponse.ok || !userData.success) {
+
+        throw new Error(
+          userData.error ||
+          "Failed to save user."
+        );
+
+      }
+
+      const bookingResponse =
+        await fetch("/api/bookings", {
+
+          method: "POST",
+
+          headers: {
+            "Content-Type": "application/json"
+          },
+
+          body: JSON.stringify({
+
+            user_id: userData.user.id,
+
+            tour_id: selectedTour.id,
+
+            booking_date:
+              bookingDate.value,
+
+            people_count:
+              bookingPeople
+
+          })
+
+        });
+
+      const bookingData =
+        await bookingResponse.json();
+
+      if (!bookingResponse.ok ||
+          !bookingData.success) {
+
+        throw new Error(
+          bookingData.error ||
+          "Failed to create booking."
+        );
+
+      }
+
+      alert(
+        "Booking submitted successfully!"
+      );
+
+      bookingPeople = 1;
+
+      updateBookingPeople();
+
+    } catch (error) {
+
+      console.error(
+        "Booking error:",
+        error
+      );
+
+      alert(
+        error.message ||
+        "Failed to submit booking."
+      );
+
+    } finally {
+
+      submitBooking.disabled = false;
+
+      submitBooking.textContent =
+        "Continue Booking";
+
+    }
+
+  };
+
+}
+
+updateBookingPeople();
