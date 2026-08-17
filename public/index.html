@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ras Dejen Tour</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <main class="app">
+
+    <!-- EXPLORE SCREEN -->
+    <section id="exploreScreen" class="screen active">
+
+      <header class="topbar">
+        <div>
+          <div class="brand">Ras Dejen Tour</div>
+          <div class="subtitle">Discover North Gondar</div>
+        </div>
+
+        <button class="profile-btn" aria-label="Account">
+          👤
+        </button>
+      </header>
+
+      <!-- SEARCH -->
+      <div class="search-box">
+        <span class="search-icon">⌕</span>
+        <input
+          type="text"
+          placeholder="Where do you want to go?"
+          id="searchInput"
+        >
+      </div>
+
+      <!-- NEARBY -->
+      <button class="nearby-btn">
+        <span>📍</span>
+        Explore Near Me
+      </button>
+
+      <!-- CATEGORIES -->
+      <section class="section">
+        <div class="section-header">
+          <h2>Explore North Gondar</h2>
+        </div>
+
+        <div class="categories">
+
+          <button class="category-card">
+            <span class="category-icon">🏛️</span>
+            <span>Places</span>
+          </button>
+
+          <button class="category-card">
+            <span class="category-icon">🏨</span>
+            <span>Hotels</span>
+          </button>
+
+          <button class="category-card">
+            <span class="category-icon">🍽️</span>
+            <span>Restaurants</span>
+          </button>
+
+          <button class="category-card">
+            <span class="category-icon">🧑‍💼</span>
+            <span>Guides</span>
+          </button>
+
+        </div>
+      </section>
+
+      <!-- POPULAR PLACES -->
+      <section class="section">
+
+        <div class="section-header">
+          <h2>Popular Places</h2>
+          <button class="see-all">See all</button>
+        </div>
+
+        <div class="place-list">
+
+          <article class="place-card">
+            <div class="place-image">
+              <span>🏛️</span>
+            </div>
+
+            <div class="place-info">
+              <h3>Discover North Gondar</h3>
+              <div class="rating">★ 4.8</div>
+              <p>Historic & cultural experience</p>
+              <small>📍 North Gondar</small>
+            </div>
+
+            <button class="save-btn">♡</button>
+          </article>
+
+          <article class="place-card">
+            <div class="place-image second">
+              <span>🏔️</span>
+            </div>
+
+            <div class="place-info">
+              <h3>Natural Attractions</h3>
+              <div class="rating">★ 4.7</div>
+              <p>Explore nature and landscapes</p>
+              <small>📍 North Gondar</small>
+            </div>
+
+            <button class="save-btn">♡</button>
+          </article>
+
+        </div>
+
+      </section>
+
+      <!-- MAP PREVIEW -->
+      <section class="map-preview">
+
+        <div>
+          <span class="map-icon">🗺️</span>
+          <h2>Explore the Map</h2>
+          <p>Find places, hotels and restaurants near you.</p>
+        </div>
+
+        <button>Open Map</button>
+
+      </section>
+
+    </section>
+
+
+    <!-- NEARBY SCREEN -->
+    <section id="nearbyScreen" class="screen">
+
+      <header class="page-header">
+        <h1>Nearby</h1>
+      </header>
+
+      <div class="map-placeholder">
+        <div class="map-center">📍</div>
+
+        <button class="search-area">
+          Search this area
+        </button>
+      </div>
+
+    </section>
+
+
+    <!-- TRIPS SCREEN -->
+    <section id="tripsScreen" class="screen">
+
+      <header class="page-header">
+        <h1>My Trips</h1>
+      </header>
+
+      <div class="empty-state">
+        <div class="empty-icon">🌍</div>
+
+        <h2>Make plans. See North Gondar.</h2>
+
+        <p>
+          Save places you want to visit and organize
+          your trip itinerary.
+        </p>
+
+        <button class="primary-btn">
+          Create a trip
+        </button>
+      </div>
+
+    </section>
+
+
+    <!-- REVIEWS SCREEN -->
+    <section id="reviewsScreen" class="screen">
+
+      <header class="page-header">
+        <h1>Reviews</h1>
+      </header>
+
+      <div class="review-hero">
+
+        <div class="review-icon">⭐</div>
+
+        <h2>Share your experience</h2>
+
+        <p>
+          Help other travelers discover the best
+          places in North Gondar.
+        </p>
+
+        <button class="primary-btn">
+          Write a review
+        </button>
+
+      </div>
+
+    </section>
+
+
+    <!-- ACCOUNT SCREEN -->
+    <section id="accountScreen" class="screen">
+
+      <header class="page-header">
+        <h1>Account</h1>
+      </header>
+
+      <div class="account-card">
+
+        <div class="avatar">👤</div>
+
+        <h2>Traveler</h2>
+
+        <p>Explore North Gondar</p>
+
+        <button class="primary-btn">
+          Sign in
+        </button>
+
+      </div>
+
+    </section>
+
+
+    <!-- BOTTOM NAVIGATION -->
+    <nav class="bottom-nav">
+
+      <button class="nav-item active" data-screen="exploreScreen">
+        <span>⌕</span>
+        <small>Explore</small>
+      </button>
+
+      <button class="nav-item" data-screen="nearbyScreen">
+        <span>➤</span>
+        <small>Nearby</small>
+      </button>
+
+      <button class="nav-item" data-screen="tripsScreen">
+        <span>♡</span>
+        <small>Trips</small>
+      </button>
+
+      <button class="nav-item" data-screen="reviewsScreen">
+        <span>▢</span>
+        <small>Reviews</small>
+      </button>
+
+      <button class="nav-item" data-screen="accountScreen">
+        <span>◉</span>
+        <small>Account</small>
+      </button>
+
+    </nav>
+<!-- PLACES SCREEN -->
+<section id="placesScreen" class="screen">
+
+  <header class="page-header">
+    <h1>Places</h1>
+    <p class="page-subtitle">Discover places in North Gondar</p>
+  </header>
+
+  <div class="filter-row">
+    <button class="filter-btn active">All</button>
+    <button class="filter-btn">Historical</button>
+    <button class="filter-btn">Natural</button>
+    <button class="filter-btn">Cultural</button>
+  </div>
+
+  <div class="places-grid">
+
+    <article class="place-list-card" data-place="gondar">
+      <div class="large-place-image gondar-image">
+        🏛️
+      </div>
+
+      <div class="place-list-info">
+        <h2>Historic Gondar</h2>
+        <div class="rating">★ 4.8</div>
+        <p>Explore the historic and cultural heritage of North Gondar.</p>
+        <small>📍 Gondar</small>
+      </div>
+
+      <button class="heart-btn">♡</button>
+    </article>
+
+    <article class="place-list-card" data-place="simien">
+      <div class="large-place-image simien-image">
+        🏔️
+      </div>
+
+      <div class="place-list-info">
+        <h2>Simien Mountains</h2>
+        <div class="rating">★ 4.9</div>
+        <p>Discover spectacular landscapes, mountains and wildlife.</p>
+        <small>📍 North Gondar</small>
+      </div>
+
+      <button class="heart-btn">♡</button>
+    </article>
+
+    <article class="place-list-card" data-place="lake-tana">
+      <div class="large-place-image lake-image">
+        🌊
+      </div>
+
+      <div class="place-list-info">
+        <h2>Lake Tana Area</h2>
+        <div class="rating">★ 4.7</div>
+        <p>Explore the lake, islands and surrounding attractions.</p>
+        <small>📍 Near Gondar</small>
+      </div>
+
+      <button class="heart-btn">♡</button>
+    </article>
+
+  </div>
+
+</section>
+
+
+<!-- PLACE DETAILS SCREEN -->
+<section id="placeDetailsScreen" class="screen">
+
+  <button class="back-btn" id="backToPlaces">
+    ← Back
+  </button>
+
+  <div class="details-hero gondar-image" id="detailsImage">
+    🏛️
+  </div>
+
+  <div class="details-content">
+
+    <div class="details-title-row">
+      <div>
+        <h1 id="detailsName">Historic Gondar</h1>
+        <div class="rating" id="detailsRating">★ 4.8</div>
+      </div>
+
+      <button class="heart-btn large-heart">♡</button>
+    </div>
+
+    <div class="location-line" id="detailsLocation">
+      📍 Gondar, North Gondar
+    </div>
+
+    <div class="details-section">
+      <h2>About this place</h2>
+
+      <p id="detailsDescription">
+        Discover the history, culture and beautiful attractions
+        of North Gondar. Explore the area and experience the
+        unique heritage of the region.
+      </p>
+    </div>
+
+    <div class="info-boxes">
+
+      <div class="info-box">
+        <span>🕐</span>
+        <strong>Opening Hours</strong>
+        <small>Check locally</small>
+      </div>
+
+      <div class="info-box">
+        <span>💰</span>
+        <strong>Entrance Fee</strong>
+        <small>Check locally</small>
+      </div>
+
+    </div>
+
+    <button class="directions-btn">
+      🗺️ Get Directions
+    </button>
+
+    <div class="details-section">
+      <div class="section-header">
+        <h2>Nearby</h2>
+      </div>
+
+      <div class="nearby-mini-list">
+
+        <div class="mini-item">
+          <span>🏨</span>
+          <div>
+            <strong>Hotels</strong>
+            <small>Find places to stay nearby</small>
+          </div>
+        </div>
+
+        <div class="mini-item">
+          <span>🍽️</span>
+          <div>
+            <strong>Restaurants</strong>
+            <small>Find food and drinks nearby</small>
+          </div>
+        </div>
+
+        <div class="mini-item">
+          <span>🧑‍💼</span>
+          <div>
+            <strong>Tour Guides</strong>
+            <small>Find a local guide</small>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="details-section">
+      <div class="section-header">
+        <h2>Reviews</h2>
+        <button class="see-all">See all</button>
+      </div>
+
+      <div class="review-summary">
+        <strong>★ 4.8</strong>
+        <span>Based on traveler reviews</span>
+      </div>
+    </div>
+
+  </div>
+
+</section>
+
+  </main>
+
+  <script src="app.js"></script>
+
+</body>
+</html>
