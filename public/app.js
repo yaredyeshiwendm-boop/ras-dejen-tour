@@ -140,39 +140,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // PLACE DATA
   // ==============================
 
-  const places = {
-
-    gondar: {
-      name: "Historic Gondar",
-      rating: "★ 4.8",
-      location: "📍 Gondar, North Gondar",
-      image: "gondar-image",
-      icon: "🏛️",
-      description:
-        "Discover the history, culture and beautiful attractions of North Gondar. Explore the area and experience the unique heritage of the region."
-    },
-
-    simien: {
-      name: "Simien Mountains",
-      rating: "★ 4.9",
-      location: "📍 North Gondar",
-      image: "simien-image",
-      icon: "🏔️",
-      description:
-        "Experience spectacular mountain landscapes, dramatic scenery and the natural beauty of North Gondar."
-    },
-
-    "lake-tana": {
-      name: "Lake Tana Area",
-      rating: "★ 4.7",
-      location: "📍 Near Gondar",
-      image: "lake-image",
-      icon: "🌊",
-      description:
-        "Explore the beautiful lake area, surrounding attractions and unique cultural experiences."
-    }
-
-  };
+  const places = {};
 
 
   // ==============================
@@ -324,4 +292,136 @@ document.addEventListener("DOMContentLoaded", () => {
 
   console.log("Ras Dejen Tour loaded successfully.");
 
+  // ==============================
+  // LOAD PLACES FROM DATABASE
+  // ==============================
+
+  async function loadPlacesFromAPI() {
+    try {
+      const response = await fetch("/api/places");
+
+      if (!response.ok) {
+        throw new Error("Failed to load places");
+      }
+
+      const data = await response.json();
+
+      if (!data.success || !Array.isArray(data.places)) {
+        return;
+      }
+
+      // If database has places, replace the static cards
+      if (data.places.length > 0) {
+
+        const placesGrid =
+          document.querySelector(".places-grid");
+
+        if (!placesGrid) return;
+
+        placesGrid.innerHTML = "";
+
+        data.places.forEach(place => {
+
+          const article =
+            document.createElement("article");
+
+          article.className = "place-list-card";
+
+          article.dataset.place = `db-${place.id}`;
+
+          article.innerHTML = `
+            <div class="large-place-image">
+              ${place.image_url
+                ? `<img src="${place.image_url}" alt="${place.name}">`
+                : "🏛️"
+              }
+            </div>
+
+            <div class="place-list-info">
+              <h2>${place.name}</h2>
+
+              <p>
+                ${place.description || ""}
+              </p>
+
+              <small>
+                📍 ${place.location || "North Gondar"}
+              </small>
+            </div>
+
+            <button class="heart-btn">♡</button>
+          `;
+
+          placesGrid.appendChild(article);
+
+          // Open database place details
+          article.addEventListener("click", () => {
+
+            document.getElementById("detailsName")
+              .textContent = place.name;
+
+            document.getElementById("detailsRating")
+              .textContent = "★ 5.0";
+
+            document.getElementById("detailsLocation")
+              .textContent =
+                `📍 ${place.location || "North Gondar"}`;
+
+            document.getElementById("detailsDescription")
+              .textContent =
+                place.description ||
+                "Discover this beautiful destination in North Gondar.";
+
+            const image =
+              document.getElementById("detailsImage");
+
+            image.className = "details-hero";
+
+            if (place.image_url) {
+              image.style.backgroundImage =
+                `url("${place.image_url}")`;
+
+              image.style.backgroundSize = "cover";
+              image.style.backgroundPosition = "center";
+              image.textContent = "";
+            } else {
+              image.style.backgroundImage = "";
+              image.textContent = "🏛️";
+            }
+
+            showScreen("placeDetailsScreen");
+          });
+
+          // Save button
+          const heart =
+            article.querySelector(".heart-btn");
+
+          if (heart) {
+            heart.addEventListener("click", event => {
+
+              event.stopPropagation();
+
+              heart.textContent =
+                heart.textContent.trim() === "♡"
+                  ? "♥"
+                  : "♡";
+
+            });
+          }
+
+        });
+      }
+
+    } catch (error) {
+
+      console.error(
+        "Places API error:",
+        error.message
+      );
+
+    }
+  }
+
+  // Load database places
+  loadPlacesFromAPI();
 });
