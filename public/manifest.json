@@ -1,0 +1,19 @@
+{
+  "name": "Ras Dejen Tour",
+  "short_name": "Ras Dejen",
+  "description": "Explore Simien Mountains and Ras Dejen",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0b0d0f",
+  "theme_color": "#0b0d0f",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

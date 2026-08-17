@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ras Dejen Tour</title>
   <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0b0d0f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Ras Dejen Tour">
 </head>
 
 <body>
@@ -521,6 +526,96 @@
 
 </section>
 
+<!-- TOUR BOOKING SCREEN -->
+<section id="tourBookingScreen" class="screen">
+
+  <button class="back-btn" id="backToTourDetailsFromBooking">
+    ← Back to Tour
+  </button>
+
+  <header class="page-header booking-page-header">
+    <div class="booking-kicker">🎫 BOOK YOUR ADVENTURE</div>
+
+    <h1 id="bookingTourName">
+      Book Your Tour
+    </h1>
+
+    <p>
+      Choose your date and number of travelers.
+    </p>
+  </header>
+
+  <div class="booking-tour-card">
+
+    <div class="booking-tour-icon">
+      🏔️
+    </div>
+
+    <div>
+      <strong id="bookingTourTitle">
+        Tour
+      </strong>
+
+      <small id="bookingTourRoute">
+        Debark → Simien Mountains
+      </small>
+    </div>
+
+  </div>
+
+  <div class="booking-section">
+
+    <label for="bookingDate">
+      📅 Travel Date
+    </label>
+
+    <input
+      type="date"
+      id="bookingDate"
+    >
+
+  </div>
+
+  <div class="booking-section">
+
+    <label for="bookingPeople">
+      👥 Number of Travelers
+    </label>
+
+    <div class="people-selector">
+
+      <button type="button" id="decreasePeople">
+        −
+      </button>
+
+      <strong id="bookingPeopleValue">
+        1
+      </strong>
+
+      <button type="button" id="increasePeople">
+        +
+      </button>
+
+    </div>
+
+  </div>
+
+  <div class="booking-note">
+    <span>ℹ️</span>
+    <p>
+      Tour price and availability are subject to confirmation.
+    </p>
+  </div>
+
+  <button
+    class="primary-btn booking-submit-btn"
+    id="submitTourBooking"
+  >
+    Continue Booking
+  </button>
+
+</section>
+
 <!-- PLACE DETAILS SCREEN -->
 <section id="placeDetailsScreen" class="screen">
 
@@ -630,6 +725,57 @@
   </main>
 
   <script src="app.js"></script>
+
+<!-- MAP CHOICE -->
+<div id="mapChoiceModal" class="map-choice-modal">
+
+  <div class="map-choice-card">
+
+    <button
+      class="map-choice-close"
+      id="closeMapChoice"
+      aria-label="Close"
+    >
+      ×
+    </button>
+
+    <div class="map-choice-icon">🗺️</div>
+
+    <h2>Open Route</h2>
+
+    <p>
+      Choose your preferred maps app
+    </p>
+
+    <button class="map-choice-btn" id="openGoogleMaps">
+      <span>🗺️</span>
+      <span>
+        <strong>Google Maps</strong>
+        <small>Open directions</small>
+      </span>
+    </button>
+
+    <button class="map-choice-btn" id="openAppleMaps">
+      <span>🍎</span>
+      <span>
+        <strong>Apple Maps</strong>
+        <small>Open directions</small>
+      </span>
+    </button>
+
+  </div>
+
+</div>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/service-worker.js')
+      .then(() => console.log('PWA Service Worker registered'))
+      .catch(err => console.error('PWA Service Worker registration failed:', err));
+  });
+}
+</script>
 
 </body>
 </html>

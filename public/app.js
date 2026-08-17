@@ -95,11 +95,74 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (openMapButton) {
 
-    openMapButton.addEventListener("click", () => {
-      showScreen("nearbyScreen");
-    });
+  openMapButton.addEventListener("click", () => {
 
-  }
+    if (!navigator.geolocation) {
+
+      alert("Location is not supported on this device.");
+
+      return;
+
+    }
+
+    navigator.geolocation.getCurrentPosition(
+
+      (position) => {
+
+        const lat =
+          position.coords.latitude;
+
+        const lng =
+          position.coords.longitude;
+
+        const googleUrl =
+          `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
+
+        const appleUrl =
+          `https://maps.apple.com/?ll=${lat},${lng}`;
+
+        const useApple =
+          /iPhone|iPad|iPod/i.test(
+            navigator.userAgent
+          );
+
+        if (useApple) {
+
+          window.open(
+            appleUrl,
+            "_blank"
+          );
+
+        } else {
+
+          window.open(
+            googleUrl,
+            "_blank"
+          );
+
+        }
+
+      },
+
+      () => {
+
+        alert(
+          "Please allow location access to explore the map."
+        );
+
+      },
+
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 60000
+      }
+
+    );
+
+  });
+
+}
 
 
   // ==============================
@@ -709,101 +772,182 @@ function openTourDetails(tour) {
 
   if (bookTourBtn) {
 
-    bookTourBtn.onclick = () => {
+  bookTourBtn.onclick = () => {
 
-      alert(
-        `Booking for ${tour.name} will be available soon.`
-      );
+    const bookingName =
+      document.getElementById("bookingTourName");
 
-    };
+    const bookingTitle =
+      document.getElementById("bookingTourTitle");
 
-  }
+    const bookingRoute =
+      document.getElementById("bookingTourRoute");
+
+    const bookingDate =
+      document.getElementById("bookingDate");
+
+    if (bookingName) {
+      bookingName.textContent =
+        tour.name;
+    }
+
+    if (bookingTitle) {
+      bookingTitle.textContent =
+        tour.name;
+    }
+
+    if (bookingRoute) {
+      bookingRoute.textContent =
+        `${tour.starting_location || "Debark"} → ${tour.destination || "Simien Mountains"}`;
+    }
+
+    if (bookingDate) {
+      bookingDate.value = "";
+    }
+
+    showScreen("tourBookingScreen");
+
+  };
+
+}
 
     const routeButton =
-    document.querySelector(
-      "#tourDetailsScreen .directions-btn"
-    );
+  document.querySelector(
+    "#tourDetailsScreen .directions-btn"
+  );
 
-  if (routeButton) {
+if (routeButton) {
 
-    routeButton.onclick = () => {
+  routeButton.onclick = () => {
 
-      const routeName =
-        document.getElementById("routeTourName");
+    const start =
+      tour.starting_location || "Debark, Ethiopia";
 
-      const routeSummary =
-        document.getElementById("routeTourSummary");
+    const destination =
+      tour.destination || "Simien Mountains, Ethiopia";
 
-      const routeStart =
-        document.getElementById("routeStart");
+    const mapsUrl =
+      "https://www.google.com/maps/dir/?api=1" +
+      `&origin=${encodeURIComponent(start)}` +
+      `&destination=${encodeURIComponent(destination)}` +
+      "&travelmode=driving";
 
-      const routeDestination =
-        document.getElementById("routeDestination");
+    window.open(mapsUrl, "_blank");
 
-      const timeline =
-        document.getElementById("routeTimeline");
+  };
 
-      if (routeName) {
-        routeName.textContent = tour.name;
-      }
+}
 
-      if (routeSummary) {
-        routeSummary.textContent =
-          `${tour.starting_location || "Debark"} to ${tour.destination || "Simien Mountains"}`;
-      }
+const mapChoiceModal =
+  document.getElementById("mapChoiceModal");
 
-      if (routeStart) {
-        routeStart.textContent =
-          tour.starting_location || "Debark";
-      }
+const closeMapChoice =
+  document.getElementById("closeMapChoice");
 
-      if (routeDestination) {
-        routeDestination.textContent =
-          tour.destination || "Simien Mountains";
-      }
+const openGoogleMaps =
+  document.getElementById("openGoogleMaps");
 
-      if (timeline) {
+const openAppleMaps =
+  document.getElementById("openAppleMaps");
 
-        const stops = [
-          tour.starting_location || "Debark",
-          tour.destination || "Simien Mountains"
-        ];
+let selectedTourForMap = null;
 
-        timeline.innerHTML = stops.map(
-          (stop, index) => `
-            <div class="route-stop">
 
-              <div class="route-dot"></div>
+if (routeButton) {
 
-              <div class="route-stop-content">
+  routeButton.onclick = () => {
 
-                <strong>
-                  ${stop}
-                </strong>
+    selectedTourForMap = tour;
 
-                <small>
-                  ${
-                    index === 0
-                      ? "Starting point of your journey"
-                      : "Tour destination"
-                  }
-                </small>
+    if (mapChoiceModal) {
+      mapChoiceModal.classList.add("active");
+    }
 
-              </div>
+  };
 
-            </div>
-          `
-        ).join("");
+}
 
-      }
 
-      showScreen("tourRouteScreen");
+if (closeMapChoice) {
 
-    };
+  closeMapChoice.onclick = () => {
 
-  }
+    mapChoiceModal.classList.remove("active");
+
+  };
+
+}
+
+
+if (openGoogleMaps) {
+
+  openGoogleMaps.onclick = () => {
+
+    if (!selectedTourForMap) return;
+
+    const start =
+      selectedTourForMap.starting_location ||
+      "Debark, Ethiopia";
+
+    const destination =
+      selectedTourForMap.destination ||
+      "Simien Mountains, Ethiopia";
+
+    const url =
+      "https://www.google.com/maps/dir/?api=1" +
+      `&origin=${encodeURIComponent(start)}` +
+      `&destination=${encodeURIComponent(destination)}` +
+      "&travelmode=driving";
+
+    window.open(url, "_blank");
+
+    mapChoiceModal.classList.remove("active");
+
+  };
+
+}
+
+
+if (openAppleMaps) {
+
+  openAppleMaps.onclick = () => {
+
+    if (!selectedTourForMap) return;
+
+    const start =
+      selectedTourForMap.starting_location ||
+      "Debark, Ethiopia";
+
+    const destination =
+      selectedTourForMap.destination ||
+      "Simien Mountains, Ethiopia";
+
+    const url =
+      "https://maps.apple.com/?saddr=" +
+      encodeURIComponent(start) +
+      "&daddr=" +
+      encodeURIComponent(destination) +
+      "&dirflg=d";
+
+    window.open(url, "_blank");
+
+    mapChoiceModal.classList.remove("active");
+
+  };
+
+}
 
   showScreen("tourDetailsScreen");
+
+}
+const backToTourDetailsFromBooking =
+  document.getElementById("backToTourDetailsFromBooking");
+
+if (backToTourDetailsFromBooking) {
+
+  backToTourDetailsFromBooking.addEventListener("click", () => {
+    showScreen("tourDetailsScreen");
+  });
 
 }
 const backToTours =
@@ -829,3 +973,26 @@ if (backToTourDetails) {
   loadPlacesFromAPI();
   loadToursFromAPI();
 });
+// ==========================================
+// PWA SERVICE WORKER
+// ==========================================
+
+if ("serviceWorker" in navigator) {
+
+  window.addEventListener("load", () => {
+
+    navigator.serviceWorker
+      .register("/service-worker.js")
+      .then(() => {
+        console.log("✅ Ras Dejen Tour PWA ready");
+      })
+      .catch((error) => {
+        console.error(
+          "❌ Service Worker registration failed:",
+          error
+        );
+      });
+
+  });
+
+}
