@@ -965,6 +965,111 @@ if (backToTourDetails) {
   });
 
 }
+
+  // ==========================================
+  // PLACE DETAILS — GET DIRECTIONS
+  // ==========================================
+
+  const placeDirectionsButton =
+    document.querySelector("#placeDetailsScreen .directions-btn");
+
+  let selectedPlaceForMap = null;
+
+  if (placeDirectionsButton) {
+
+    placeDirectionsButton.addEventListener("click", () => {
+
+      const name =
+        document.getElementById("detailsName")?.textContent.trim();
+
+      const locationText =
+        document.getElementById("detailsLocation")?.textContent
+          .replace(/^📍\s*/, "")
+          .trim();
+
+      if (!name && !locationText) {
+        alert("Place location is not available.");
+        return;
+      }
+
+      selectedPlaceForMap = {
+        name: name || "Selected place",
+        location: locationText || name
+      };
+
+      if (mapChoiceModal) {
+        mapChoiceModal.classList.add("active");
+      }
+
+    });
+
+  }
+
+
+  // ==========================================
+  // PLACE — GOOGLE MAPS
+  // ==========================================
+
+  const existingOpenGoogleMaps = openGoogleMaps;
+
+  if (existingOpenGoogleMaps) {
+
+    existingOpenGoogleMaps.addEventListener("click", () => {
+
+      if (!selectedPlaceForMap) return;
+
+      const destination =
+        selectedPlaceForMap.location ||
+        selectedPlaceForMap.name;
+
+      const url =
+        "https://www.google.com/maps/dir/?api=1" +
+        `&destination=${encodeURIComponent(destination)}` +
+        "&travelmode=driving";
+
+      window.open(url, "_blank");
+
+      if (mapChoiceModal) {
+        mapChoiceModal.classList.remove("active");
+      }
+
+    });
+
+  }
+
+
+  // ==========================================
+  // PLACE — APPLE MAPS
+  // ==========================================
+
+  const existingOpenAppleMaps = openAppleMaps;
+
+  if (existingOpenAppleMaps) {
+
+    existingOpenAppleMaps.addEventListener("click", () => {
+
+      if (!selectedPlaceForMap) return;
+
+      const destination =
+        selectedPlaceForMap.location ||
+        selectedPlaceForMap.name;
+
+      const url =
+        "https://maps.apple.com/?daddr=" +
+        encodeURIComponent(destination) +
+        "&dirflg=d";
+
+      window.open(url, "_blank");
+
+      if (mapChoiceModal) {
+        mapChoiceModal.classList.remove("active");
+      }
+
+    });
+
+  }
+
+
   loadPlacesFromAPI();
   loadToursFromAPI();
 });
