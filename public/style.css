@@ -2707,155 +2707,287 @@ button {
 
 /* =========================================================
    FINAL FIX — PLACES LIST ONLY
-   Image completely separated from text
-========================================================= */
+
+/* ==========================================
+   PLACES SCREEN — FINAL CLEAN CARD LAYOUT
+   ========================================== */
 
 #placesScreen .places-grid .place-list-card {
   display: flex !important;
   flex-direction: column !important;
+  width: 100% !important;
   overflow: hidden !important;
+  position: relative !important;
 }
 
-/* IMAGE FRAME */
+/* PHOTO — SEPARATE AREA */
 #placesScreen .places-grid .large-place-image {
   position: relative !important;
-
   width: 100% !important;
-  height: 205px !important;
-
-  flex: 0 0 205px !important;
-
-  display: block !important;
+  height: 210px !important;
+  flex: 0 0 210px !important;
   overflow: hidden !important;
-
+  display: block !important;
   background: #111 !important;
 }
 
-/* IMAGE — SAME FRAME FOR EVERY PLACE */
+/* ALL PHOTOS — SAME FRAME */
 #placesScreen .places-grid .large-place-image img {
   position: absolute !important;
   inset: 0 !important;
-
   width: 100% !important;
   height: 100% !important;
-
   object-fit: cover !important;
   object-position: center center !important;
-
   display: block !important;
 }
 
-/* NO DARK GRADIENT */
-#placesScreen .places-grid .large-place-image::after {
+/* REMOVE ALL IMAGE OVERLAYS */
+#placesScreen .places-grid .large-place-image::after,
+#placesScreen .places-grid .place-image-overlay {
   display: none !important;
   content: none !important;
 }
 
-/* NO IMAGE OVERLAY */
-#placesScreen .places-grid .place-image-overlay {
-  display: none !important;
-}
-
-/* CATEGORY BADGE — SMALL AND OUT OF THE TEXT */
+/* CATEGORY — INSIDE PHOTO */
 #placesScreen .places-grid .place-type-badge {
   position: absolute !important;
-
   top: 12px !important;
   left: 12px !important;
-  bottom: auto !important;
-
   z-index: 5 !important;
-
   padding: 6px 10px !important;
-
   border-radius: 999px !important;
-
-  background: rgba(0,0,0,.68) !important;
+  background: rgba(0,0,0,.72) !important;
   color: #fff !important;
-
   font-size: 10px !important;
   line-height: 1 !important;
-
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
 }
 
-/* TEXT AREA — COMPLETELY BELOW IMAGE */
+/* TEXT — COMPLETELY SEPARATE FROM PHOTO */
 #placesScreen .places-grid .place-list-info {
   position: relative !important;
-
   width: 100% !important;
   box-sizing: border-box !important;
-
   display: block !important;
-
-  padding: 16px 52px 18px 18px !important;
-
+  padding: 17px 52px 19px 18px !important;
   background: var(--card) !important;
-
-  opacity: 1 !important;
-  visibility: visible !important;
-
   z-index: 10 !important;
 }
 
-/* TITLE + RATING */
+/* TITLE */
 #placesScreen .places-grid .place-title-row {
-  position: relative !important;
-
-  width: 100% !important;
-  box-sizing: border-box !important;
-
   display: flex !important;
-
   align-items: center !important;
   justify-content: space-between !important;
-
+  width: 100% !important;
   gap: 10px !important;
-
   margin: 0 0 9px !important;
 }
 
-/* TITLE */
 #placesScreen .places-grid .place-title-row h2 {
   margin: 0 !important;
-
   min-width: 0 !important;
-
   font-size: 20px !important;
   line-height: 1.25 !important;
-
   color: #fff !important;
 }
 
 /* RATING */
 #placesScreen .places-grid .place-rating {
   flex: 0 0 auto !important;
-
   white-space: nowrap !important;
-
   font-size: 12px !important;
-
   color: #f5c542 !important;
 }
 
-/* DESCRIPTION */
+/* DESCRIPTION — NEVER OVER PHOTO */
 #placesScreen .places-grid .place-list-info p {
+  display: block !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  margin: 0 0 11px !important;
+  color: #bdbdbd !important;
+  font-size: 13px !important;
+  line-height: 1.6 !important;
+}
+
+/* LOCATION */
+#placesScreen .places-grid .place-list-info small {
+  display: block !important;
+  margin: 0 !important;
+  color: #929292 !important;
+  font-size: 12px !important;
+  line-height: 1.4 !important;
+}
+
+/* HEART */
+#placesScreen .places-grid .heart-btn {
+  position: absolute !important;
+  top: 12px !important;
+  right: 12px !important;
+  z-index: 20 !important;
+}
+
+/* PHONE */
+@media (max-width: 480px) {
+  #placesScreen .places-grid .large-place-image {
+    height: 200px !important;
+    flex-basis: 200px !important;
+  }
+}
+
+/* TABLET / DESKTOP */
+@media (min-width: 481px) {
+  #placesScreen .places-grid .large-place-image {
+    height: 230px !important;
+    flex-basis: 230px !important;
+  }
+}
+
+/* =========================================================
+   FINAL PLACES LIST CARD LAYOUT
+   Image and description are completely separate.
+========================================================= */
+
+#placesScreen .places-grid .place-list-card {
+  display: flex !important;
+  flex-direction: column !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+/* IMAGE AREA */
+#placesScreen .places-grid .large-place-image {
+  position: relative !important;
+  width: 100% !important;
+  height: 210px !important;
+  flex: 0 0 210px !important;
+  overflow: hidden !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: #111 !important;
+}
+
+/* IMAGE — SHOW THE WHOLE PHOTO */
+#placesScreen .places-grid .large-place-image img {
+  position: relative !important;
+  inset: auto !important;
+
+  width: 100% !important;
+  height: 100% !important;
+
+  display: block !important;
+
+  object-fit: contain !important;
+  object-position: center center !important;
+
+  background: #111 !important;
+}
+
+/* REMOVE ALL IMAGE EFFECTS */
+#placesScreen .places-grid .large-place-image::after,
+#placesScreen .places-grid .place-image-overlay {
+  display: none !important;
+  content: none !important;
+}
+
+/* CATEGORY */
+#placesScreen .places-grid .place-type-badge {
+  position: absolute !important;
+  top: 12px !important;
+  left: 12px !important;
+  bottom: auto !important;
+
+  z-index: 20 !important;
+
+  padding: 6px 10px !important;
+  border-radius: 999px !important;
+
+  background: rgba(0,0,0,.70) !important;
+  color: #fff !important;
+
+  font-size: 10px !important;
+  line-height: 1 !important;
+}
+
+/* DESCRIPTION AREA — ALWAYS BELOW IMAGE */
+#placesScreen .places-grid .place-list-info {
   position: relative !important;
 
   display: block !important;
 
   width: 100% !important;
+  min-height: 0 !important;
+
   box-sizing: border-box !important;
 
-  margin: 0 0 10px !important;
+  padding: 17px 58px 19px 18px !important;
+
+  margin: 0 !important;
+
+  background: var(--card) !important;
+
+  z-index: 10 !important;
+}
+
+/* TITLE */
+#placesScreen .places-grid .place-title-row {
+  display: flex !important;
+  align-items: flex-start !important;
+  justify-content: space-between !important;
+
+  width: 100% !important;
+
+  margin: 0 0 8px !important;
+  padding: 0 !important;
+
+  gap: 10px !important;
+}
+
+#placesScreen .places-grid .place-title-row h2 {
+  margin: 0 !important;
+  padding: 0 !important;
+
+  min-width: 0 !important;
+
+  color: #fff !important;
+
+  font-size: 20px !important;
+  line-height: 1.25 !important;
+}
+
+/* RATING */
+#placesScreen .places-grid .place-rating {
+  flex: 0 0 auto !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  color: #f5c542 !important;
+
+  font-size: 12px !important;
+  line-height: 1.3 !important;
+
+  white-space: nowrap !important;
+}
+
+/* DESCRIPTION TEXT */
+#placesScreen .places-grid .place-list-info p {
+  display: block !important;
+
+  width: 100% !important;
+
+  margin: 0 0 11px !important;
+  padding: 0 !important;
 
   color: #bdbdbd !important;
 
   font-size: 13px !important;
-  line-height: 1.55 !important;
+  line-height: 1.6 !important;
 
-  z-index: 11 !important;
+  white-space: normal !important;
+  overflow: visible !important;
 }
 
 /* LOCATION */
@@ -2863,6 +2995,7 @@ button {
   display: block !important;
 
   margin: 0 !important;
+  padding: 0 !important;
 
   color: #929292 !important;
 
@@ -2870,32 +3003,28 @@ button {
   line-height: 1.4 !important;
 }
 
-/* HEART STAYS ON IMAGE */
+/* HEART */
 #placesScreen .places-grid .heart-btn {
   position: absolute !important;
 
   top: 12px !important;
   right: 12px !important;
 
-  z-index: 20 !important;
+  z-index: 30 !important;
 }
 
 /* PHONE */
 @media (max-width: 480px) {
-
   #placesScreen .places-grid .large-place-image {
     height: 200px !important;
     flex-basis: 200px !important;
   }
-
 }
 
 /* LARGER SCREENS */
 @media (min-width: 481px) {
-
   #placesScreen .places-grid .large-place-image {
     height: 230px !important;
     flex-basis: 230px !important;
   }
-
 }
