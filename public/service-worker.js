@@ -1,4 +1,4 @@
-const CACHE_NAME = "ras-dejen-tour-v2";
+const CACHE_NAME = "ras-dejen-tour-v3";
 
 const APP_FILES = [
   "/",
@@ -50,6 +50,23 @@ self.addEventListener("fetch", (event) => {
       fetch(event.request).catch(() =>
         caches.match(event.request)
       )
+    );
+
+    return;
+  }
+
+  // CSS: always try the newest version first.
+  if (url.pathname === "/style.css") {
+    event.respondWith(
+      fetch(event.request)
+        .then((response) => {
+          const copy = response.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(event.request, copy);
+          });
+          return response;
+        })
+        .catch(() => caches.match(event.request))
     );
 
     return;
