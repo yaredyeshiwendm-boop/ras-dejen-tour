@@ -1003,203 +1003,277 @@ if ("serviceWorker" in navigator) {
 
 }
 
+
 /* ==========================================
    BOOKING CONTROLS
    ========================================== */
 
-const decreasePeople =
-  document.getElementById("decreasePeople");
+document.addEventListener("DOMContentLoaded", () => {
 
-const increasePeople =
-  document.getElementById("increasePeople");
+  const decreasePeople =
+    document.getElementById("decreasePeople");
 
-const peopleValue =
-  document.getElementById("bookingPeopleValue");
+  const increasePeople =
+    document.getElementById("increasePeople");
 
-const submitBooking =
-  document.getElementById("submitTourBooking");
+  const peopleValue =
+    document.getElementById("bookingPeopleValue");
 
-const bookingDate =
-  document.getElementById("bookingDate");
+  const submitBooking =
+    document.getElementById("submitTourBooking");
 
-let bookingPeople = 1;
+  const bookingDate =
+    document.getElementById("bookingDate");
 
-function updateBookingPeople() {
+  let bookingPeople = 1;
 
-  if (peopleValue) {
-    peopleValue.textContent = bookingPeople;
+  function updateBookingPeople() {
+
+    if (peopleValue) {
+      peopleValue.textContent =
+        String(bookingPeople);
+    }
+
+    if (decreasePeople) {
+      decreasePeople.disabled =
+        bookingPeople <= 1;
+    }
+
   }
 
   if (decreasePeople) {
-    decreasePeople.disabled = bookingPeople <= 1;
+
+    decreasePeople.addEventListener(
+      "click",
+      (event) => {
+
+        event.preventDefault();
+
+        if (bookingPeople > 1) {
+
+          bookingPeople--;
+
+          updateBookingPeople();
+
+        }
+
+      }
+    );
+
   }
-}
 
-if (decreasePeople) {
+  if (increasePeople) {
 
-  decreasePeople.onclick = () => {
+    increasePeople.addEventListener(
+      "click",
+      (event) => {
 
-    if (bookingPeople > 1) {
-      bookingPeople--;
-      updateBookingPeople();
-    }
+        event.preventDefault();
 
-  };
+        const selectedTour =
+          window.currentTour || null;
 
-}
+        const maxPeople =
+          Number(
+            selectedTour?.max_people || 10
+          );
 
-if (increasePeople) {
+        if (bookingPeople < maxPeople) {
 
-  increasePeople.onclick = () => {
+          bookingPeople++;
 
-    bookingPeople++;
-    updateBookingPeople();
+          updateBookingPeople();
 
-  };
-
-}
-
-if (submitBooking) {
-
-  submitBooking.onclick = async () => {
-
-    const selectedTour =
-      window.currentTour || null;
-
-    if (!selectedTour || !selectedTour.id) {
-
-      alert("Please select a tour first.");
-
-      return;
-    }
-
-    if (!bookingDate || !bookingDate.value) {
-
-      alert("Please select your travel date.");
-
-      return;
-    }
-
-    submitBooking.disabled = true;
-    submitBooking.textContent = "Booking...";
-
-    try {
-
-      const telegramUser =
-        window.Telegram?.WebApp?.initDataUnsafe?.user;
-
-      if (!telegramUser?.id) {
-
-        throw new Error(
-          "Unable to identify Telegram user."
-        );
+        }
 
       }
+    );
 
-      const userResponse =
-        await fetch("/api/users", {
+  }
 
-          method: "POST",
+  if (submitBooking) {
 
-          headers: {
-            "Content-Type": "application/json"
-          },
+    submitBooking.addEventListener(
+      "click",
+      async (event) => {
 
-          body: JSON.stringify({
+        event.preventDefault();
 
-            telegram_id: telegramUser.id,
+        const selectedTour =
+          window.currentTour || null;
 
-            first_name:
-              telegramUser.first_name || "",
+        if (
+          !selectedTour ||
+          !selectedTour.id
+        ) {
 
-            username:
-              telegramUser.username || ""
+          alert(
+            "Please select a tour first."
+          );
 
-          })
+          return;
+        }
 
-        });
+        if (
+          !bookingDate ||
+          !bookingDate.value
+        ) {
 
-      const userData =
-        await userResponse.json();
+          alert(
+            "Please select your travel date."
+          );
 
-      if (!userResponse.ok || !userData.success) {
+          return;
+        }
 
-        throw new Error(
-          userData.error ||
-          "Failed to save user."
-        );
+        const telegramUser =
+          window.Telegram
+            ?.WebApp
+            ?.initDataUnsafe
+            ?.user;
+
+        if (!telegramUser?.id) {
+
+          alert(
+            "Unable to identify Telegram user."
+          );
+
+          return;
+        }
+
+        submitBooking.disabled = true;
+
+        submitBooking.textContent =
+          "Booking...";
+
+        try {
+
+          const userResponse =
+            await fetch(
+              "/api/users",
+              {
+                method: "POST",
+
+                headers: {
+                  "Content-Type":
+                    "application/json"
+                },
+
+                body: JSON.stringify({
+                  telegram_id:
+                    telegramUser.id,
+
+                  first_name:
+                    telegramUser.first_name ||
+                    "",
+
+                  username:
+                    telegramUser.username ||
+                    ""
+                })
+              }
+            );
+
+          const userData =
+            await userResponse.json();
+
+          if (
+            !userResponse.ok ||
+            !userData.success
+          ) {
+
+            throw new Error(
+              userData.error ||
+              "Failed to save user."
+            );
+
+          }
+
+          const bookingResponse =
+            await fetch(
+              "/api/bookings",
+              {
+                method: "POST",
+
+                headers: {
+                  "Content-Type":
+                    "application/json"
+                },
+
+                body: JSON.stringify({
+
+                  user_id:
+                    userData.user.id,
+
+                  tour_id:
+                    selectedTour.id,
+
+                  booking_date:
+                    bookingDate.value,
+
+                  people_count:
+                    bookingPeople
+
+                })
+              }
+            );
+
+          const bookingData =
+            await bookingResponse.json();
+
+          if (
+            !bookingResponse.ok ||
+            !bookingData.success
+          ) {
+
+            throw new Error(
+              bookingData.error ||
+              "Failed to create booking."
+            );
+
+          }
+
+          alert(
+            "Booking submitted successfully!\n\n" +
+            "Tour: " +
+            selectedTour.name +
+            "\nDate: " +
+            bookingDate.value +
+            "\nTravelers: " +
+            bookingPeople
+          );
+
+          bookingPeople = 1;
+
+          updateBookingPeople();
+
+        } catch (error) {
+
+          console.error(
+            "Booking error:",
+            error
+          );
+
+          alert(
+            error.message ||
+            "Failed to submit booking."
+          );
+
+        } finally {
+
+          submitBooking.disabled =
+            false;
+
+          submitBooking.textContent =
+            "Continue Booking";
+
+        }
 
       }
+    );
 
-      const bookingResponse =
-        await fetch("/api/bookings", {
+  }
 
-          method: "POST",
+  updateBookingPeople();
 
-          headers: {
-            "Content-Type": "application/json"
-          },
-
-          body: JSON.stringify({
-
-            user_id: userData.user.id,
-
-            tour_id: selectedTour.id,
-
-            booking_date:
-              bookingDate.value,
-
-            people_count:
-              bookingPeople
-
-          })
-
-        });
-
-      const bookingData =
-        await bookingResponse.json();
-
-      if (!bookingResponse.ok ||
-          !bookingData.success) {
-
-        throw new Error(
-          bookingData.error ||
-          "Failed to create booking."
-        );
-
-      }
-
-      alert(
-        "Booking submitted successfully!"
-      );
-
-      bookingPeople = 1;
-
-      updateBookingPeople();
-
-    } catch (error) {
-
-      console.error(
-        "Booking error:",
-        error
-      );
-
-      alert(
-        error.message ||
-        "Failed to submit booking."
-      );
-
-    } finally {
-
-      submitBooking.disabled = false;
-
-      submitBooking.textContent =
-        "Continue Booking";
-
-    }
-
-  };
-
-}
-
-updateBookingPeople();
+});
