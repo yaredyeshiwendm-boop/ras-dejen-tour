@@ -380,15 +380,16 @@ if (category === "Tours") {
         return;
       }
 
-      // If database has places, replace the static cards
+      // Database is the single source of truth.
+      // Clear static HTML cards immediately.
+      const placesGrid =
+        document.querySelector(".places-grid");
+
+      if (!placesGrid) return;
+
+      placesGrid.innerHTML = "";
+
       if (data.places.length > 0) {
-
-        const placesGrid =
-          document.querySelector(".places-grid");
-
-        if (!placesGrid) return;
-
-        placesGrid.innerHTML = "";
 
         data.places.forEach(place => {
 
@@ -399,27 +400,82 @@ if (category === "Tours") {
 
           article.dataset.place = `db-${place.id}`;
 
+          const placeName = (place.name || "").toLowerCase();
+
+          let placeIcon = "🏛️";
+          let placeClass = "place-natural";
+
+          if (
+            placeName.includes("simien") ||
+            placeName.includes("ras dejen") ||
+            placeName.includes("bwahit") ||
+            placeName.includes("chenek") ||
+            placeName.includes("mountain") ||
+            placeName.includes("peak")
+          ) {
+            placeIcon = "🏔️";
+            placeClass = "place-mountain";
+          } else if (
+            placeName.includes("waterfall") ||
+            placeName.includes("jinbar")
+          ) {
+            placeIcon = "💧";
+            placeClass = "place-water";
+          } else if (
+            placeName.includes("gondar") ||
+            placeName.includes("castle") ||
+            placeName.includes("palace")
+          ) {
+            placeIcon = "🏰";
+            placeClass = "place-historical";
+          } else if (
+            placeName.includes("debar") ||
+            placeName.includes("buyit") ||
+            placeName.includes("sankaber") ||
+            placeName.includes("geech") ||
+            placeName.includes("imet")
+          ) {
+            placeIcon = "📍";
+            placeClass = "place-destination";
+          }
+
           article.innerHTML = `
-            <div class="large-place-image">
-              ${place.image_url
-                ? `<img src="${place.image_url}" alt="${place.name}">`
-                : "🏛️"
+            <div class="large-place-image ${placeClass}">
+              ${
+                place.image_url
+                  ? `<img src="${place.image_url}" alt="${place.name}">`
+                  : `<div class="place-icon">${placeIcon}</div>`
               }
+
+              <div class="place-image-overlay"></div>
+
+              <div class="place-type-badge">
+                ${place.category || "Explore"}
+              </div>
             </div>
 
             <div class="place-list-info">
-              <h2>${place.name}</h2>
+
+              <div class="place-title-row">
+                <h2>${place.name}</h2>
+                <span class="place-rating">★ 5.0</span>
+              </div>
 
               <p>
-                ${place.description || ""}
+                ${place.description || "Discover this beautiful destination in North Gondar."}
               </p>
 
               <small>
                 📍 ${place.location || "North Gondar"}
               </small>
+
             </div>
 
-            <button class="heart-btn">♡</button>
+            <button
+              class="heart-btn"
+              type="button"
+              aria-label="Save ${place.name}"
+            >♡</button>
           `;
 
           placesGrid.appendChild(article);

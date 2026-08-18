@@ -1,4 +1,4 @@
-const CACHE_NAME = "ras-dejen-tour-v1";
+const CACHE_NAME = "ras-dejen-tour-v2";
 
 const APP_FILES = [
   "/",
@@ -10,9 +10,9 @@ const APP_FILES = [
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(APP_FILES);
-    })
+    caches.open(CACHE_NAME).then((cache) =>
+      cache.addAll(APP_FILES)
+    )
   );
 
   self.skipWaiting();
@@ -33,7 +33,27 @@ self.addEventListener("activate", (event) => {
 });
 
 self.addEventListener("fetch", (event) => {
-  if (event.request.method !== "GET") return;
+
+  if (event.request.method !== "GET") {
+    return;
+  }
+
+  const url = new URL(event.request.url);
+
+  // Always get the latest JavaScript and HTML.
+  if (
+    url.pathname === "/" ||
+    url.pathname === "/index.html" ||
+    url.pathname === "/app.js"
+  ) {
+    event.respondWith(
+      fetch(event.request).catch(() =>
+        caches.match(event.request)
+      )
+    );
+
+    return;
+  }
 
   event.respondWith(
     caches.match(event.request).then((cached) => {
