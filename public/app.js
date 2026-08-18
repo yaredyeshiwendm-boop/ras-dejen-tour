@@ -989,6 +989,17 @@ if (backToTourDetailsFromBooking) {
   });
 
 }
+const backToPlaces =
+  document.getElementById("backToPlaces");
+
+if (backToPlaces) {
+
+  backToPlaces.addEventListener("click", () => {
+    showScreen("placesScreen");
+  });
+
+}
+
 const backToTours =
   document.getElementById("backToTours");
 
