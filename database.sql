@@ -12,6 +12,8 @@ CREATE TABLE IF NOT EXISTS places (
     description TEXT,
     location VARCHAR(200),
     image_url TEXT,
+    latitude NUMERIC(10,7),
+    longitude NUMERIC(10,7),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

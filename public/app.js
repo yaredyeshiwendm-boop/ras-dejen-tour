@@ -295,6 +295,49 @@ if (category === "Tours") {
 
   console.log("Ras Dejen Tour loaded successfully.");
 
+// ==========================================
+// PLACE MAP DIRECTIONS
+// ==========================================
+
+let selectedPlaceForMap = null;
+
+function openPlaceDirections(place) {
+
+  if (!place) return;
+
+  const latitude = Number(place.latitude);
+  const longitude = Number(place.longitude);
+
+  if (
+    !Number.isFinite(latitude) ||
+    !Number.isFinite(longitude)
+  ) {
+    alert("Map location is not available for this place yet.");
+    return;
+  }
+
+  const destination =
+    `${latitude},${longitude}`;
+
+  const googleUrl =
+    "https://www.google.com/maps/dir/?api=1" +
+    `&destination=${encodeURIComponent(destination)}` +
+    "&travelmode=driving";
+
+  const appleUrl =
+    "https://maps.apple.com/?daddr=" +
+    encodeURIComponent(destination) +
+    "&dirflg=d";
+
+  const useApple =
+    /iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+  window.open(
+    useApple ? appleUrl : googleUrl,
+    "_blank"
+  );
+}
+
   // ==============================
   // LOAD PLACES FROM DATABASE
   // ==============================
@@ -449,6 +492,7 @@ if (category === "Tours") {
             }
 
             showScreen("placeDetailsScreen");
+            selectedPlaceForMap = place;
           });
 
           // Save button
@@ -971,104 +1015,26 @@ if (backToTourDetails) {
   // ==========================================
 
   const placeDirectionsButton =
-    document.querySelector("#placeDetailsScreen .directions-btn");
-
-  let selectedPlaceForMap = null;
+    document.querySelector(
+      "#placeDetailsScreen .directions-btn"
+    );
 
   if (placeDirectionsButton) {
 
     placeDirectionsButton.addEventListener("click", () => {
 
-      const name =
-        document.getElementById("detailsName")?.textContent.trim();
-
-      const locationText =
-        document.getElementById("detailsLocation")?.textContent
-          .replace(/^📍\s*/, "")
-          .trim();
-
-      if (!name && !locationText) {
-        alert("Place location is not available.");
+      if (!selectedPlaceForMap) {
+        alert("Please select a place first.");
         return;
       }
 
-      selectedPlaceForMap = {
-        name: name || "Selected place",
-        location: locationText || name
-      };
-
-      if (mapChoiceModal) {
-        mapChoiceModal.classList.add("active");
-      }
+      openPlaceDirections(selectedPlaceForMap);
 
     });
 
   }
 
-
-  // ==========================================
-  // PLACE — GOOGLE MAPS
-  // ==========================================
-
-  const existingOpenGoogleMaps = openGoogleMaps;
-
-  if (existingOpenGoogleMaps) {
-
-    existingOpenGoogleMaps.addEventListener("click", () => {
-
-      if (!selectedPlaceForMap) return;
-
-      const destination =
-        selectedPlaceForMap.location ||
-        selectedPlaceForMap.name;
-
-      const url =
-        "https://www.google.com/maps/dir/?api=1" +
-        `&destination=${encodeURIComponent(destination)}` +
-        "&travelmode=driving";
-
-      window.open(url, "_blank");
-
-      if (mapChoiceModal) {
-        mapChoiceModal.classList.remove("active");
-      }
-
-    });
-
-  }
-
-
-  // ==========================================
-  // PLACE — APPLE MAPS
-  // ==========================================
-
-  const existingOpenAppleMaps = openAppleMaps;
-
-  if (existingOpenAppleMaps) {
-
-    existingOpenAppleMaps.addEventListener("click", () => {
-
-      if (!selectedPlaceForMap) return;
-
-      const destination =
-        selectedPlaceForMap.location ||
-        selectedPlaceForMap.name;
-
-      const url =
-        "https://maps.apple.com/?daddr=" +
-        encodeURIComponent(destination) +
-        "&dirflg=d";
-
-      window.open(url, "_blank");
-
-      if (mapChoiceModal) {
-        mapChoiceModal.classList.remove("active");
-      }
-
-    });
-
-  }
-
+  // Load places from database
 
   loadPlacesFromAPI();
   loadToursFromAPI();
