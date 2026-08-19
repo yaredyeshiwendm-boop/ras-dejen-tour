@@ -25,13 +25,3 @@ CREATE TABLE IF NOT EXISTS tours (
     duration VARCHAR(100),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-
-CREATE TABLE IF NOT EXISTS bookings (
-    id SERIAL PRIMARY KEY,
-    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-    tour_id INTEGER REFERENCES tours(id) ON DELETE CASCADE,
-    booking_date DATE,
-    people_count INTEGER DEFAULT 1,
-    status VARCHAR(30) DEFAULT 'pending',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);

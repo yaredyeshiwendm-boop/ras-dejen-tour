@@ -201,29 +201,30 @@
     </section>
 
 
-    <!-- TRIPS SCREEN -->
+        <!-- TRIPS SCREEN -->
     <section id="tripsScreen" class="screen">
 
       <header class="page-header">
         <h1>My Trips</h1>
       </header>
 
-      <div class="empty-state">
-        <div class="empty-icon">🌍</div>
+      <div id="savedPlacesContainer" class="places-grid">
 
-        <h2>Make plans. See North Gondar.</h2>
+        <div class="empty-state">
+          <div class="empty-icon">🌍</div>
 
-        <p>
-          Save places you want to visit and organize
-          your trip itinerary.
-        </p>
+          <h2>No saved places yet</h2>
 
-        <button class="primary-btn">
-          Create a trip
-        </button>
+          <p>
+            Save places you want to visit and they will appear here.
+          </p>
+        </div>
+
       </div>
 
     </section>
+
+
 
 
     <!-- REVIEWS SCREEN -->
@@ -404,13 +405,6 @@
 
     <div class="info-boxes">
 
-      <div class="info-box">
-        <span>💰</span>
-        <strong>Price</strong>
-        <small id="tourDetailsPrice">
-          0 ETB
-        </small>
-      </div>
 
       <div class="info-box">
         <span>🕐</span>
@@ -518,94 +512,7 @@
 
 </section>
 
-<!-- TOUR BOOKING SCREEN -->
-<section id="tourBookingScreen" class="screen">
 
-  <button class="back-btn" id="backToTourDetailsFromBooking">
-    ← Back to Tour
-  </button>
-
-  <header class="page-header booking-page-header">
-    <div class="booking-kicker">🎫 BOOK YOUR ADVENTURE</div>
-
-    <h1 id="bookingTourName">
-      Book Your Tour
-    </h1>
-
-    <p>
-      Choose your date and number of travelers.
-    </p>
-  </header>
-
-  <div class="booking-tour-card">
-
-    <div class="booking-tour-icon">
-      🏔️
-    </div>
-
-    <div>
-      <strong id="bookingTourTitle">
-        Tour
-      </strong>
-
-      <small id="bookingTourRoute">
-        Debark → Simien Mountains
-      </small>
-    </div>
-
-  </div>
-
-  <div class="booking-section">
-
-    <label for="bookingDate">
-      📅 Travel Date
-    </label>
-
-    <input
-      type="date"
-      id="bookingDate"
-    >
-
-  </div>
-
-  <div class="booking-section">
-
-    <label for="bookingPeople">
-      👥 Number of Travelers
-    </label>
-
-    <div class="people-selector">
-
-      <button type="button" id="decreasePeople">
-        −
-      </button>
-
-      <strong id="bookingPeopleValue">
-        1
-      </strong>
-
-      <button type="button" id="increasePeople">
-        +
-      </button>
-
-    </div>
-
-  </div>
-
-  <div class="booking-note">
-    <span>ℹ️</span>
-    <p>
-      Tour price and availability are subject to confirmation.
-    </p>
-  </div>
-
-  <button
-    class="primary-btn booking-submit-btn"
-    id="submitTourBooking"
-  >
-  </button>
-
-</section>
 
 <!-- PLACE DETAILS SCREEN -->
 <section id="placeDetailsScreen" class="screen">

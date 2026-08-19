@@ -127,55 +127,6 @@ app.post("/api/users", async (req, res) => {
 });
 
 // ─────────────────────────────────────────────
-// CREATE BOOKING
-// ─────────────────────────────────────────────
-
-app.post("/api/bookings", async (req, res) => {
-  try {
-    const {
-      user_id,
-      tour_id,
-      booking_date,
-      people_count
-    } = req.body;
-
-    if (!user_id || !tour_id || !booking_date) {
-      return res.status(400).json({
-        success: false,
-        error: "user_id, tour_id and booking_date are required"
-      });
-    }
-
-    const count = Number(people_count || 1);
-
-    if (!Number.isInteger(count) || count < 1) {
-      return res.status(400).json({
-        success: false,
-        error: "people_count must be at least 1"
-      });
-    }
-
-    const result = await query(
-      `INSERT INTO bookings
-        (user_id, tour_id, booking_date, people_count)
-       VALUES ($1, $2, $3, $4)
-       RETURNING *`,
-      [user_id, tour_id, booking_date, count]
-    );
-
-    res.status(201).json({
-      success: true,
-      booking: result.rows[0]
-    });
-  } catch (error) {
-    console.error("Booking error:", error.message);
-
-    res.status(500).json({
-      success: false,
-      error: "Failed to create booking"
-    });
-  }
-});
 
 // ─────────────────────────────────────────────
 // START SERVER

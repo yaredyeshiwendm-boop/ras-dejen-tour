@@ -207,31 +207,6 @@ if (category === "Tours") {
 
 
   // ==============================
-  // SAVE PLACE
-  // ==============================
-
-  document.querySelectorAll(".save-btn, .heart-btn")
-    .forEach(button => {
-
-      button.addEventListener("click", event => {
-
-        event.stopPropagation();
-
-        if (button.textContent.trim() === "♡") {
-
-          button.textContent = "♥";
-
-        } else {
-
-          button.textContent = "♡";
-
-        }
-
-      });
-
-    });
-
-
   // ==============================
   // SEARCH
   // ==============================
@@ -500,16 +475,55 @@ function openPlaceDirections(place) {
             article.querySelector(".heart-btn");
 
           if (heart) {
+
+            const savedPlaces =
+              JSON.parse(
+                localStorage.getItem("savedPlaces") || "[]"
+              );
+
+            const isSaved =
+              savedPlaces.some(
+                saved => Number(saved.id) === Number(place.id)
+              );
+
+            heart.textContent =
+              isSaved ? "♥" : "♡";
+
             heart.addEventListener("click", event => {
 
               event.stopPropagation();
 
-              heart.textContent =
-                heart.textContent.trim() === "♡"
-                  ? "♥"
-                  : "♡";
+              let saved =
+                JSON.parse(
+                  localStorage.getItem("savedPlaces") || "[]"
+                );
+
+              const index =
+                saved.findIndex(
+                  item => Number(item.id) === Number(place.id)
+                );
+
+              if (index === -1) {
+
+                saved.push(place);
+                heart.textContent = "♥";
+
+              } else {
+
+                saved.splice(index, 1);
+                heart.textContent = "♡";
+
+              }
+
+              localStorage.setItem(
+                "savedPlaces",
+                JSON.stringify(saved)
+              );
+
+              renderSavedPlaces();
 
             });
+
           }
 
         });
@@ -612,10 +626,6 @@ async function loadToursFromAPI() {
           </div>
 
           <div class="tour-bottom">
-
-            <strong>
-              ${Number(tour.price).toLocaleString()} ETB
-            </strong>
 
             <button class="tour-view-btn">
               View Tour
@@ -727,9 +737,6 @@ function openTourDetails(tour) {
   const description =
     document.getElementById("tourDetailsDescription");
 
-  const price =
-    document.getElementById("tourDetailsPrice");
-
   const duration =
     document.getElementById("tourDetailsDuration");
 
@@ -753,11 +760,6 @@ function openTourDetails(tour) {
   if (description) {
     description.textContent =
       tour.description || "";
-  }
-
-  if (price) {
-    price.textContent =
-      `${Number(tour.price || 0).toLocaleString()} ETB`;
   }
 
   if (duration) {
@@ -809,43 +811,7 @@ function openTourDetails(tour) {
 
       window.currentTour = tour;
 
-      const bookingName =
-        document.getElementById("bookingTourName");
 
-      const bookingTitle =
-        document.getElementById("bookingTourTitle");
-
-      const bookingRoute =
-        document.getElementById("bookingTourRoute");
-
-      const bookingDate =
-        document.getElementById("bookingDate");
-
-      const peopleValue =
-        document.getElementById("bookingPeopleValue");
-
-      if (bookingName) {
-        bookingName.textContent = tour.name;
-      }
-
-      if (bookingTitle) {
-        bookingTitle.textContent = tour.name;
-      }
-
-      if (bookingRoute) {
-        bookingRoute.textContent =
-          `${tour.starting_location || "Debark"} → ${tour.destination || "Simien Mountains"}`;
-      }
-
-      if (bookingDate) {
-        bookingDate.value = "";
-      }
-
-      if (peopleValue) {
-        peopleValue.textContent = "1";
-      }
-
-      showScreen("tourBookingScreen");
     };
 
   }
@@ -979,49 +945,7 @@ if (openAppleMaps) {
   showScreen("tourDetailsScreen");
 
 }
-const backToTourDetailsFromBooking =
-  document.getElementById("backToTourDetailsFromBooking");
-
-if (backToTourDetailsFromBooking) {
-
-  backToTourDetailsFromBooking.addEventListener("click", () => {
-    showScreen("tourDetailsScreen");
-  });
-
-}
-const backToPlaces =
-  document.getElementById("backToPlaces");
-
-if (backToPlaces) {
-
-  backToPlaces.addEventListener("click", () => {
-    showScreen("placesScreen");
-  });
-
-}
-
-const backToTours =
-  document.getElementById("backToTours");
-
-if (backToTours) {
-
-  backToTours.addEventListener("click", () => {
-    showScreen("toursScreen");
-  });
-
-}
-const backToTourDetails =
-  document.getElementById("backToTourDetails");
-
-if (backToTourDetails) {
-
-  backToTourDetails.addEventListener("click", () => {
-    showScreen("tourDetailsScreen");
-  });
-
-}
-
-  // ==========================================
+// ==========================================
   // PLACE DETAILS — GET DIRECTIONS
   // ==========================================
 
@@ -1045,306 +969,193 @@ if (backToTourDetails) {
 
   }
 
+  // ==========================================
+  // SAVED PLACES / MY TRIPS
+  // ==========================================
+
+  function renderSavedPlaces() {
+
+    const container =
+      document.getElementById("savedPlacesContainer");
+
+    if (!container) return;
+
+    const saved =
+      JSON.parse(
+        localStorage.getItem("savedPlaces") || "[]"
+      );
+
+    if (saved.length === 0) {
+
+      container.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-icon">🌍</div>
+
+          <h2>No saved places yet</h2>
+
+          <p>
+            Save places you want to visit and they will appear here.
+          </p>
+        </div>
+      `;
+
+      return;
+    }
+
+    container.innerHTML = "";
+
+    saved.forEach(place => {
+
+      const article =
+        document.createElement("article");
+
+      article.className = "place-list-card";
+
+      article.innerHTML = `
+        <div class="large-place-image place-natural">
+          ${
+            place.image_url
+              ? `<img src="${place.image_url}" alt="${place.name}">`
+              : `<div class="place-icon">🏛️</div>`
+          }
+        </div>
+
+        <div class="place-list-info">
+
+          <div class="place-title-row">
+            <h2>${place.name}</h2>
+            <span class="place-rating">★ 5.0</span>
+          </div>
+
+          <p>
+            ${place.description || "Discover this beautiful destination in North Gondar."}
+          </p>
+
+          <small>
+            📍 ${place.location || "North Gondar"}
+          </small>
+
+        </div>
+
+        <button
+          class="heart-btn"
+          type="button"
+          aria-label="Remove ${place.name}"
+        >♥</button>
+      `;
+
+      container.appendChild(article);
+
+      article.addEventListener("click", event => {
+
+        if (event.target.closest(".heart-btn")) return;
+
+        document.getElementById("detailsName")
+          .textContent = place.name;
+
+        document.getElementById("detailsRating")
+          .textContent = "★ 5.0";
+
+        document.getElementById("detailsLocation")
+          .textContent =
+            `📍 ${place.location || "North Gondar"}`;
+
+        document.getElementById("detailsDescription")
+          .textContent =
+            place.description ||
+            "Discover this beautiful destination in North Gondar.";
+
+        const image =
+          document.getElementById("detailsImage");
+
+        image.className = "details-hero";
+
+        if (place.image_url) {
+
+          image.style.backgroundImage =
+            `url("${place.image_url}")`;
+
+          image.style.backgroundSize = "cover";
+          image.style.backgroundPosition = "center";
+          image.textContent = "";
+
+        } else {
+
+          image.style.backgroundImage = "";
+          image.textContent = "🏛️";
+
+        }
+
+        selectedPlaceForMap = place;
+
+        showScreen("placeDetailsScreen");
+
+      });
+
+      const heart =
+        article.querySelector(".heart-btn");
+
+      heart.addEventListener("click", event => {
+
+        event.stopPropagation();
+
+        const current =
+          JSON.parse(
+            localStorage.getItem("savedPlaces") || "[]"
+          );
+
+        const updated =
+          current.filter(
+            item => Number(item.id) !== Number(place.id)
+          );
+
+        localStorage.setItem(
+          "savedPlaces",
+          JSON.stringify(updated)
+        );
+
+        renderSavedPlaces();
+
+        // Refresh hearts on Places screen
+        document.querySelectorAll(".place-list-card").forEach(card => {
+
+          if (
+            card.dataset.place === `db-${place.id}`
+          ) {
+
+            const cardHeart =
+              card.querySelector(".heart-btn");
+
+            if (cardHeart) {
+              cardHeart.textContent = "♡";
+            }
+
+          }
+
+        });
+
+      });
+
+    });
+
+  }
+
+  const tripsNav =
+    document.querySelector(
+      '.nav-item[data-screen="tripsScreen"]'
+    );
+
+  if (tripsNav) {
+
+    tripsNav.addEventListener("click", () => {
+      renderSavedPlaces();
+    });
+
+  }
+
   // Load places from database
 
   loadPlacesFromAPI();
+  renderSavedPlaces();
   loadToursFromAPI();
-});
-// ==========================================
-// PWA SERVICE WORKER
-// ==========================================
-
-if ("serviceWorker" in navigator) {
-
-  window.addEventListener("load", () => {
-
-    navigator.serviceWorker
-      .register("/service-worker.js")
-      .then(() => {
-        console.log("✅ Ras Dejen Tour PWA ready");
-      })
-      .catch((error) => {
-        console.error(
-          "❌ Service Worker registration failed:",
-          error
-        );
-      });
-
-  });
-
-}
-
-
-/* ==========================================
-   BOOKING CONTROLS
-   ========================================== */
-
-document.addEventListener("DOMContentLoaded", () => {
-
-  const decreasePeople =
-    document.getElementById("decreasePeople");
-
-  const increasePeople =
-    document.getElementById("increasePeople");
-
-  const peopleValue =
-    document.getElementById("bookingPeopleValue");
-
-  const submitBooking =
-    document.getElementById("submitTourBooking");
-
-  const bookingDate =
-    document.getElementById("bookingDate");
-
-  let bookingPeople = 1;
-
-  function updateBookingPeople() {
-
-    if (peopleValue) {
-      peopleValue.textContent =
-        String(bookingPeople);
-    }
-
-    if (decreasePeople) {
-      decreasePeople.disabled =
-        bookingPeople <= 1;
-    }
-
-  }
-
-  if (decreasePeople) {
-
-    decreasePeople.addEventListener(
-      "click",
-      (event) => {
-
-        event.preventDefault();
-
-        if (bookingPeople > 1) {
-
-          bookingPeople--;
-
-          updateBookingPeople();
-
-        }
-
-      }
-    );
-
-  }
-
-  if (increasePeople) {
-
-    increasePeople.addEventListener(
-      "click",
-      (event) => {
-
-        event.preventDefault();
-
-        const selectedTour =
-          window.currentTour || null;
-
-        const maxPeople =
-          Number(
-            selectedTour?.max_people || 10
-          );
-
-        if (bookingPeople < maxPeople) {
-
-          bookingPeople++;
-
-          updateBookingPeople();
-
-        }
-
-      }
-    );
-
-  }
-
-  if (submitBooking) {
-
-    submitBooking.addEventListener(
-      "click",
-      async (event) => {
-
-        event.preventDefault();
-
-        const selectedTour =
-          window.currentTour || null;
-
-        if (
-          !selectedTour ||
-          !selectedTour.id
-        ) {
-
-          alert(
-            "Please select a tour first."
-          );
-
-          return;
-        }
-
-        if (
-          !bookingDate ||
-          !bookingDate.value
-        ) {
-
-          alert(
-            "Please select your travel date."
-          );
-
-          return;
-        }
-
-        const telegramUser =
-          window.Telegram
-            ?.WebApp
-            ?.initDataUnsafe
-            ?.user;
-
-        if (!telegramUser?.id) {
-
-          alert(
-            "Unable to identify Telegram user."
-          );
-
-          return;
-        }
-
-        submitBooking.disabled = true;
-
-        submitBooking.textContent =
-          "Booking...";
-
-        try {
-
-          const userResponse =
-            await fetch(
-              "/api/users",
-              {
-                method: "POST",
-
-                headers: {
-                  "Content-Type":
-                    "application/json"
-                },
-
-                body: JSON.stringify({
-                  telegram_id:
-                    telegramUser.id,
-
-                  first_name:
-                    telegramUser.first_name ||
-                    "",
-
-                  username:
-                    telegramUser.username ||
-                    ""
-                })
-              }
-            );
-
-          const userData =
-            await userResponse.json();
-
-          if (
-            !userResponse.ok ||
-            !userData.success
-          ) {
-
-            throw new Error(
-              userData.error ||
-              "Failed to save user."
-            );
-
-          }
-
-          const bookingResponse =
-            await fetch(
-              "/api/bookings",
-              {
-                method: "POST",
-
-                headers: {
-                  "Content-Type":
-                    "application/json"
-                },
-
-                body: JSON.stringify({
-
-                  user_id:
-                    userData.user.id,
-
-                  tour_id:
-                    selectedTour.id,
-
-                  booking_date:
-                    bookingDate.value,
-
-                  people_count:
-                    bookingPeople
-
-                })
-              }
-            );
-
-          const bookingData =
-            await bookingResponse.json();
-
-          if (
-            !bookingResponse.ok ||
-            !bookingData.success
-          ) {
-
-            throw new Error(
-              bookingData.error ||
-              "Failed to create booking."
-            );
-
-          }
-
-          alert(
-            "Booking submitted successfully!\n\n" +
-            "Tour: " +
-            selectedTour.name +
-            "\nDate: " +
-            bookingDate.value +
-            "\nTravelers: " +
-            bookingPeople
-          );
-
-          bookingPeople = 1;
-
-          updateBookingPeople();
-
-        } catch (error) {
-
-          console.error(
-            "Booking error:",
-            error
-          );
-
-          alert(
-            error.message ||
-            "Failed to submit booking."
-          );
-
-        } finally {
-
-          submitBooking.disabled =
-            false;
-
-          submitBooking.textContent =
-            "Continue Booking";
-
-        }
-
-      }
-    );
-
-  }
-
-  updateBookingPeople();
-
 });
