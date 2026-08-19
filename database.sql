@@ -161,3 +161,137 @@ SELECT
 WHERE NOT EXISTS (
   SELECT 1 FROM places WHERE name = 'Debark'
 );
+
+-- ============================================
+-- RAS DEJEN TOUR — DEBARK HOTELS
+-- ============================================
+
+INSERT INTO hotels
+(name, description, location, phone, latitude, longitude)
+SELECT
+'Tsehay Zeleke Hotel',
+'Comfortable hotel in Debark, serving travelers visiting the Simien Mountains.',
+'Debark, North Gondar',
+'+251 916 252000',
+13.1561,
+37.8981
+WHERE NOT EXISTS (
+  SELECT 1 FROM hotels WHERE name = 'Tsehay Zeleke Hotel'
+);
+
+INSERT INTO hotels
+(name, description, location, phone, latitude, longitude)
+SELECT
+'Ras Dejen Hotel',
+'Hotel in Debark located near the main route to the Simien Mountains.',
+'Debark, North Gondar',
+'+251 928 955551',
+13.145207,
+37.893868
+WHERE NOT EXISTS (
+  SELECT 1 FROM hotels WHERE name = 'Ras Dejen Hotel'
+);
+
+INSERT INTO hotels
+(name, description, location, phone, latitude, longitude)
+SELECT
+'Jeramba Hotel',
+'Hotel in Debark near the Simien Park area and a convenient base for travelers.',
+'Debark, North Gondar',
+NULL,
+13.1528,
+37.8986
+WHERE NOT EXISTS (
+  SELECT 1 FROM hotels WHERE name = 'Jeramba Hotel'
+);
+
+INSERT INTO hotels
+(name, description, location, phone, latitude, longitude)
+SELECT
+'Simien Park Hotel',
+'Long-established hotel in Debark serving visitors traveling to the Simien Mountains.',
+'Debark, North Gondar',
+'+251 918 788136',
+13.152796,
+37.898562
+WHERE NOT EXISTS (
+  SELECT 1 FROM hotels WHERE name = 'Simien Park Hotel'
+);
+
+INSERT INTO hotels
+(name, description, location, phone, latitude, longitude)
+SELECT
+'Unique Landscape Hotel',
+'Accommodation in Debark for travelers exploring the Simien Mountains and surrounding landscapes.',
+'Kebele 03, Debark',
+NULL,
+NULL,
+NULL
+WHERE NOT EXISTS (
+  SELECT 1 FROM hotels WHERE name = 'Unique Landscape Hotel'
+);
+
+INSERT INTO hotels
+(name, description, location, phone, latitude, longitude)
+SELECT
+'Jasmine Hotel',
+'Hotel in Debark providing accommodation for travelers visiting the Simien Mountains.',
+'Kebele 01, Debark',
+'+251 927 607948',
+13.155596,
+37.898584
+WHERE NOT EXISTS (
+  SELECT 1 FROM hotels WHERE name = 'Jasmine Hotel'
+);
+
+INSERT INTO hotels
+(name, description, location, phone, latitude, longitude)
+SELECT
+'Sona Hotel',
+'Hotel in Debark located on the main road and serving visitors to the Simien area.',
+'Kebele 02, Debark',
+'+251 581 170627',
+NULL,
+NULL
+WHERE NOT EXISTS (
+  SELECT 1 FROM hotels WHERE name = 'Sona Hotel'
+);
+
+INSERT INTO hotels
+(name, description, location, phone, latitude, longitude)
+SELECT
+'Emitgogo Hotel',
+'Hotel in Debark near the main road and a convenient stop for Simien travelers.',
+'Kebele 02, Debark',
+'+251 581 170634',
+13.157583,
+37.8981
+WHERE NOT EXISTS (
+  SELECT 1 FROM hotels WHERE name = 'Emitgogo Hotel'
+);
+
+INSERT INTO hotels
+(name, description, location, phone, latitude, longitude)
+SELECT
+'Giant Lobelia Hotel',
+'Hotel on the main road in Debark serving travelers visiting the Simien Mountains.',
+'Main Road, Debark',
+'+251 581 170560',
+13.149127,
+37.896485
+WHERE NOT EXISTS (
+  SELECT 1 FROM hotels WHERE name = 'Giant Lobelia Hotel'
+);
+
+INSERT INTO hotels
+(name, description, location, phone, latitude, longitude)
+SELECT
+'Atse Tewodros Hotel',
+'Hotel in Debark serving travelers visiting the Simien Mountains.',
+'Debark, North Gondar',
+'+251 911 918097',
+13.136212,
+37.892875
+WHERE NOT EXISTS (
+  SELECT 1 FROM hotels WHERE name = 'Atse Tewodros Hotel'
+);

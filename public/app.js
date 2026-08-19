@@ -205,9 +205,6 @@ if (category === "Tours") {
   return;
 }
 
-      alert(
-        `${category}\n\nThis section will be available soon.`
-      );
 
     });
 
@@ -1159,6 +1156,112 @@ if (openAppleMaps) {
       renderSavedPlaces();
     });
 
+  }
+
+  // ==============================
+  // HOTELS
+  // ==============================
+
+  async function loadHotelsFromAPI() {
+    const hotelsGrid = document.getElementById("hotelsGrid");
+
+    if (!hotelsGrid) return;
+
+    try {
+      const response = await fetch("/api/hotels");
+
+      if (!response.ok) {
+        throw new Error("Failed to load hotels");
+      }
+
+      const data = await response.json();
+
+      if (!data.success || !Array.isArray(data.hotels)) {
+        throw new Error("Invalid hotels response");
+      }
+
+      hotelsGrid.innerHTML = "";
+
+      if (data.hotels.length === 0) {
+        hotelsGrid.innerHTML = `
+          <div class="loading-state">
+            No hotels available yet.
+          </div>
+        `;
+        return;
+      }
+
+      data.hotels.forEach(hotel => {
+        const article = document.createElement("article");
+
+        article.className = "place-list-card";
+
+        article.innerHTML = `
+          <div class="large-place-image place-destination">
+            ${
+              hotel.image_url
+                ? `<img src="${hotel.image_url}" alt="${hotel.name}">`
+                : `<div class="place-icon">🏨</div>`
+            }
+
+            <div class="place-image-overlay"></div>
+
+            <div class="place-type-badge">
+              Hotel
+            </div>
+          </div>
+
+          <div class="place-list-info">
+
+            <div class="place-title-row">
+              <h2>${hotel.name}</h2>
+              <span class="place-rating">
+                ★ ${hotel.rating || "0.0"}
+              </span>
+            </div>
+
+            <p>
+              ${hotel.description || "Comfortable accommodation in North Gondar."}
+            </p>
+
+            <small>
+              📍 ${hotel.location || "North Gondar"}
+            </small>
+
+          </div>
+        `;
+
+        hotelsGrid.appendChild(article);
+      });
+
+    } catch (error) {
+      console.error("Hotels error:", error);
+
+      hotelsGrid.innerHTML = `
+        <div class="loading-state">
+          Failed to load hotels.
+        </div>
+      `;
+    }
+  }
+
+  const hotelsCategoryBtn =
+    document.getElementById("hotelsCategoryBtn");
+
+  if (hotelsCategoryBtn) {
+    hotelsCategoryBtn.addEventListener("click", () => {
+      showScreen("hotelsScreen");
+      loadHotelsFromAPI();
+    });
+  }
+
+  const backToHotelsExplore =
+    document.getElementById("backToHotelsExplore");
+
+  if (backToHotelsExplore) {
+    backToHotelsExplore.addEventListener("click", () => {
+      showScreen("exploreScreen");
+    });
   }
 
   // Load places from database
