@@ -1,4 +1,4 @@
-const CACHE_NAME = "ras-dejen-tour-v3";
+const CACHE_NAME = "ras-dejen-tour-v4";
 
 const APP_FILES = [
   "/",

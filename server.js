@@ -82,6 +82,33 @@ app.get("/api/tours", async (req, res) => {
 });
 
 // ─────────────────────────────────────────────
+// HOTELS
+// ─────────────────────────────────────────────
+
+app.get("/api/hotels", async (req, res) => {
+  try {
+    const result = await query(
+      "SELECT * FROM hotels ORDER BY id ASC"
+    );
+
+    res.json({
+      success: true,
+      hotels: result.rows
+    });
+
+  } catch (error) {
+
+    console.error("Hotels error:", error.message);
+
+    res.status(500).json({
+      success: false,
+      error: "Failed to load hotels"
+    });
+
+  }
+});
+
+// ─────────────────────────────────────────────
 // CREATE USER
 // ─────────────────────────────────────────────
 
