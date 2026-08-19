@@ -37,6 +37,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ==============================
   // BOTTOM NAVIGATION
+  const backToPlaces = document.getElementById("backToPlaces");
+
+  if (backToPlaces) {
+    backToPlaces.addEventListener("click", () => {
+      showScreen("placesScreen");
+    });
+  }
+
   // ==============================
 
   navItems.forEach(item => {
