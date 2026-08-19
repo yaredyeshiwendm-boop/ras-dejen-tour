@@ -334,7 +334,7 @@ function openPlaceDirections(place) {
       // Database is the single source of truth.
       // Clear static HTML cards immediately.
       const placesGrid =
-        document.querySelector(".places-grid");
+        document.getElementById("placesGrid");
 
       if (!placesGrid) return;
 
