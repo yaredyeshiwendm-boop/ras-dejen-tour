@@ -37,6 +37,7 @@ CREATE TABLE IF NOT EXISTS hotels (
     latitude NUMERIC(10,7),
     longitude NUMERIC(10,7),
     rating NUMERIC(2,1) DEFAULT 0,
+    category VARCHAR(50) DEFAULT 'Hotel',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

@@ -1191,8 +1191,24 @@ if (openAppleMaps) {
         return;
       }
 
-      data.hotels.forEach(hotel => {
-        const article = document.createElement("article");
+      window.rasDejenHotels = data.hotels;
+
+      renderHotels(data.hotels);
+
+      function renderHotels(hotels) {
+        hotelsGrid.innerHTML = "";
+
+        if (hotels.length === 0) {
+          hotelsGrid.innerHTML = `
+            <div class="loading-state">
+              No accommodations available in this category yet.
+            </div>
+          `;
+          return;
+        }
+
+        hotels.forEach(hotel => {
+          const article = document.createElement("article");
 
         article.className = "place-list-card";
 
@@ -1231,8 +1247,9 @@ if (openAppleMaps) {
           </div>
         `;
 
-        hotelsGrid.appendChild(article);
-      });
+          hotelsGrid.appendChild(article);
+        });
+      }
 
     } catch (error) {
       console.error("Hotels error:", error);
@@ -1244,6 +1261,35 @@ if (openAppleMaps) {
       `;
     }
   }
+
+  const hotelFilterButtons =
+    document.querySelectorAll("[data-hotel-category]");
+
+  hotelFilterButtons.forEach(button => {
+    button.addEventListener("click", () => {
+
+      hotelFilterButtons.forEach(btn =>
+        btn.classList.remove("active")
+      );
+
+      button.classList.add("active");
+
+      const category =
+        button.dataset.hotelCategory;
+
+      const hotels =
+        window.rasDejenHotels || [];
+
+      const filteredHotels =
+        category === "All"
+          ? hotels
+          : hotels.filter(hotel =>
+              hotel.category === category
+            );
+
+      renderHotels(filteredHotels);
+    });
+  });
 
   const hotelsCategoryBtn =
     document.getElementById("hotelsCategoryBtn");
